@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Exoplayer App</string>
+    <string name="player_activity_name">Media player</string>
+    <string name="logo">logo</string>
+    <string name="sample_dash_url">https://content.uplynk.com/bf31772bc8a64e75b00dcc17bdbb287f.mpd</string>
+    <string name="working_dash_url">https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd</string>
 </resources>

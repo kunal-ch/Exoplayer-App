@@ -58,31 +58,34 @@ class MainActivity : AppCompatActivity() {
         playerView.player = player
         val uri = Uri.parse(getString(R.string.working_dash_url))
         val mediaSource = buildDrmDashMediaSource(uri)
-        player!!.playWhenReady = playWhenReady
-        player!!.seekTo(currentWindow, playbackPosition)
-        player!!.addListener(playbackStateListener)
-        player!!.prepare(mediaSource, false, false)
 
-        player!!.addListener(
-            object : Player.EventListener {
-                override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {
-                    val mManifest = player!!.currentManifest
-                    if (mManifest != null) {
-                        val dashManifest = mManifest as DashManifest
-                        // Do something with the manifest.
-                        Log.d("TAG", "DashManifest: $dashManifest")
+        player?.let {
+            it.playWhenReady = playWhenReady
+            it.seekTo(currentWindow, playbackPosition)
+            it.addListener(playbackStateListener)
+            it.prepare(mediaSource, false, false)
+            it.addListener(
+                object : Player.EventListener {
+                    override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {
+                        val mManifest = player!!.currentManifest
+                        if (mManifest != null) {
+                            val dashManifest = mManifest as DashManifest
+                            // Do something with the manifest.
+                            Log.d("TAG", "DashManifest: $dashManifest")
+                        }
                     }
-                }
-            })
+                })
+        }
     }
 
     private fun buildDrmDashMediaSource(uri: Uri): MediaSource {
-        val dataSourceFactory = DefaultDataSourceFactory(this, "exoplayer-codelab")
+        val dataSourceFactory = DefaultDataSourceFactory(this, userAgent)
         val dFactory = DefaultDashChunkSource.Factory(dataSourceFactory)
         val dashFactory = DashMediaSource.Factory(dFactory, dataSourceFactory)
         return dashFactory.createMediaSource(uri)
     }
 
+    @Suppress("DEPRECATION")
     private fun hideSystemUI() {
         playerView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -123,12 +126,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun releasePlayer() {
-        if (player != null) {
-            playWhenReady = player!!.playWhenReady
-            playbackPosition = player!!.currentPosition
-            currentWindow = player!!.currentWindowIndex
-            player!!.removeListener(playbackStateListener)
-            player!!.release()
+        player?.let { it ->
+            playWhenReady = it.playWhenReady
+            playbackPosition = it.currentPosition
+            currentWindow = it.currentWindowIndex
+            it.removeListener(playbackStateListener)
+            it.release()
             player = null
         }
     }

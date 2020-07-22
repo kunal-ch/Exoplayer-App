@@ -3,5 +3,14 @@
     <string name="player_activity_name">Media player</string>
     <string name="logo">logo</string>
     <string name="sample_dash_url">https://content.uplynk.com/bf31772bc8a64e75b00dcc17bdbb287f.mpd</string>
+    <string name="sample_dash_url2">https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd</string>
+    <string name="sample_dash_url_non_drm">https://content.uplynk.com/5bc38f7536d0425f87723ddd5fd2b59d.mpd</string>
+    <string name="sample_dash_url_non_drm_subtitle">https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd</string>
     <string name="working_dash_url">https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd</string>
+
+    <!-- Worked with DRM But no audio and Video without DRM-->
+    <!-- Dolby -->
+    <string name="eros_dash_url_worked">https://content.uplynk.com/bf31772bc8a64e75b00dcc17bdbb287f.mpd</string>
+    <!-- Saichen Glacier -->
+    <string name="eros_dash_url">https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd</string>
 </resources>

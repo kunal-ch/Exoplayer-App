@@ -33,30 +33,50 @@ class MainActivity : AppCompatActivity() {
     private var playbackStateListener = PlaybackStateListener()
     private var TAG = MainActivity::class.qualifiedName
 
+    // Change this
+    private val isDrm = true
+    private val licenseUrl = licenseUrlSample
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         playerView = findViewById(R.id.video_view)
     }
 
-    private fun initializePlayer() {
-        val drmCallback =
-            HttpMediaDrmCallback(licenseUrlWorking, DefaultHttpDataSourceFactory(userAgent))
-        val drmSessionManager = DefaultDrmSessionManager(
-            C.WIDEVINE_UUID,
-            FrameworkMediaDrm.newInstance(C.WIDEVINE_UUID), drmCallback, null, false, 1
-        )
-
+    private fun initializePlayer(isDrm: Boolean) {
         val trackSelector = DefaultTrackSelector()
         trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd())
-        player = ExoPlayerFactory.newSimpleInstance(
-            this,
-            DefaultRenderersFactory(this, drmSessionManager),
-            trackSelector
-        )
+        trackSelector.setParameters(trackSelector.buildUponParameters().setPreferredTextLanguage("en"))
+
+        if (isDrm) {
+            val drmCallback =
+                HttpMediaDrmCallback(licenseUrl, DefaultHttpDataSourceFactory(userAgent))
+            val drmSessionManager = DefaultDrmSessionManager(
+                C.WIDEVINE_UUID,
+                FrameworkMediaDrm.newInstance(C.WIDEVINE_UUID), drmCallback, null, true, 1
+            )
+            player = ExoPlayerFactory.newSimpleInstance(
+                this,
+                DefaultRenderersFactory(this, drmSessionManager),
+                trackSelector
+            )
+        } else {
+            player = ExoPlayerFactory.newSimpleInstance(
+                this,
+                trackSelector
+            )
+        }
 
         playerView.player = player
-        val uri = Uri.parse(getString(R.string.working_dash_url))
+
+
+
+
+        /**
+         * Change this
+         */
+        val uri = Uri.parse(getString(R.string.eros_dash_url))
+//        val uri = Uri.parse("https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd?drm_policy_name=TEST001&exp=1596282416&cid=a0c04727eda44eca8bc116e654aa1439&rn=3256526194&tc=1&ct=a&sig=3b4cda3cc117dd09f257ff827c34c9c105735fed78b96a80aa4fa2d0763b2313")
         val mediaSource = buildDrmDashMediaSource(uri)
 
         player?.let {
@@ -64,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             it.seekTo(currentWindow, playbackPosition)
             it.addListener(playbackStateListener)
             it.prepare(mediaSource, false, false)
-            it.addListener(
+            /*it.addListener(
                 object : Player.EventListener {
                     override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {
                         val mManifest = player!!.currentManifest
@@ -74,14 +94,14 @@ class MainActivity : AppCompatActivity() {
                             Log.d("TAG", "DashManifest: $dashManifest")
                         }
                     }
-                })
+                })*/
         }
     }
 
     private fun buildDrmDashMediaSource(uri: Uri): MediaSource {
         val dataSourceFactory = DefaultDataSourceFactory(this, userAgent)
-        val dFactory = DefaultDashChunkSource.Factory(dataSourceFactory)
-        val dashFactory = DashMediaSource.Factory(dFactory, dataSourceFactory)
+        //val dFactory = DefaultDashChunkSource.Factory(dataSourceFactory)
+        val dashFactory = DashMediaSource.Factory( dataSourceFactory)
         return dashFactory.createMediaSource(uri)
     }
 
@@ -99,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         // After API 24 multi window is supported to we can take advantage
         if (Util.SDK_INT > 24) {
-            initializePlayer()
+            initializePlayer(isDrm)
         }
     }
 
@@ -107,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (Util.SDK_INT < 24 && player == null) {
             hideSystemUI()
-            initializePlayer()
+            initializePlayer(isDrm)
         }
     }
 

@@ -75,8 +75,8 @@ class MainActivity : AppCompatActivity() {
         /**
          * Change this
          */
-        val uri = Uri.parse(getString(R.string.eros_dash_url))
-//        val uri = Uri.parse("https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd?drm_policy_name=TEST001&exp=1596282416&cid=a0c04727eda44eca8bc116e654aa1439&rn=3256526194&tc=1&ct=a&sig=3b4cda3cc117dd09f257ff827c34c9c105735fed78b96a80aa4fa2d0763b2313")
+//        val uri = Uri.parse(getString(R.string.eros_dash_url_worked))
+        val uri = Uri.parse("https://content.uplynk.com/a0c04727eda44eca8bc116e654aa1439.mpd?drm_policy_name=TEST002&exp=1596351164&cid=a0c04727eda44eca8bc116e654aa1439&rn=3771026647&tc=1&ct=a&sig=f0e6e79b1e57fc1b7ae06a7b31de32ca1c3dd41936495056fcd5c2c0e66335c7")
         val mediaSource = buildDrmDashMediaSource(uri)
 
         player?.let {
